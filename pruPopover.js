@@ -99,7 +99,7 @@ define([
                return eventBinding(element,scope,attribute);
            },
            scope:{
-               body: '@pruPopover'
+               body: '@keyPopover'
            }
            
        };
