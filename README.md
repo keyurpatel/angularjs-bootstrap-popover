@@ -21,8 +21,3 @@ popover-placement - to position the popover/tooltip {bottom | top | left | right
 popover-title - to set the title for the popover/tooltip
 popover-trigger - to set the event {hover | click | manual | focus}
 popover-content - to set the content for popover.
-
-
-eg:
-HTML
-"<a href="#" key-popover popover-placement="top" popover-title="{{someBindingData}}" popover-trigger="" popover-content="{{someBindingData}}">Please see the magic !!! </a>"
