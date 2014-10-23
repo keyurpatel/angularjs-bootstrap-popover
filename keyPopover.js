@@ -12,7 +12,7 @@ define([
     function eventBinding(element,scope,attribute){        
        return $(element).bind({
            mouseenter: function(e) {
-               if(attribute.popoverTrigger){
+               if(attribute.popoverTrigger === 'hover'){
                    var popoverDiv = $(element).next();
                    if ($(element).next('div.popover:visible').length){
                               // popover is visible    
