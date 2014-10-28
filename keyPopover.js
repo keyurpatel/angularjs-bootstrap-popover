@@ -9,12 +9,14 @@ define([
     'ngApplication'
 ],function(app){
 
-    function eventBinding(element,scope,attribute){        
-       return $(element).bind({
-           mouseenter: function(e) {
-               if(attribute.popoverTrigger === 'hover'){
-                   var popoverDiv = $(element).next();
-                   if ($(element).next('div.popover:visible').length){
+    function closePopover(closeBtn,popoverDiv){
+        $(closeBtn).bind('click',function(){                       
+                          $(popoverDiv).popover('hide');
+                       });
+    }
+    
+    function changeBgPopoverColor(element,popoverDiv){
+         if ($(element).next('div.popover:visible').length){
                               // popover is visible    
 
                               $($(popoverDiv).children()[1]).css({
@@ -22,6 +24,14 @@ define([
                                   'border-bottom': '0'                              
                               });
                             } 
+    }
+    
+    function eventBinding(element,scope,attribute){        
+       return $(element).bind({
+           mouseenter: function(e) {
+               if(attribute.popoverTrigger === 'hover'){
+                   var popoverDiv = $(element).next();
+                  changeBgPopoverColor(element,popoverDiv);
                 }
            },
            mouseleave: function(e) {
@@ -31,26 +41,16 @@ define([
                
                    var popoverDiv = $(element).next();
                    if(scope.body){                       
-                       if ($(element).next('div.popover:visible').length){
-                          // popover is visible                                                 
-                          $($(popoverDiv).children()[1]).css({
-                              'background-color': '#FFFFFF',
-                              'border-bottom': '0'                              
-                          });
-                        } 
+                       changeBgPopoverColor(element,popoverDiv);
                        
                         // getting closeBtn handle inside popover div
                        var closeBtn = $($(popoverDiv).children()[1]).children()[0];
-                       $(closeBtn).bind('click',function(){                       
-                          $(popoverDiv).popover('hide');
-                       });
+                       closePopover(closeBtn,popoverDiv);
                        
                    }else{
                         // getting closeBtn handle inside popover div
                        var closeBtn = $($(popoverDiv).children()[1]).children()[1];
-                       $(closeBtn).bind('click',function(){                       
-                          $(popoverDiv).popover('hide');
-                       });
+                       closePopover(closeBtn,popoverDiv);
                    }
            },
            blur: function(e){
@@ -75,26 +75,17 @@ define([
                    // here body parameter from key-popover attribute determines whether to act as popover with title and body or tooltip with just body.
                    if(scope.body){
                        var getTitle = "<button type='button' class='close'>&times;</button>";
-                                              
-                        $(element).popover({
-                            'placement': attribute.popoverPlacement || 'bottom',
-                            'html': true,
-                            'title':$compile(getTitle)(scope),
-                            'content' :  $compile(popoverBodyData)(scope),
-                            'trigger': attribute.popoverTrigger || 'click'
-                        });
-                   
                    }else{
                        var getTitle = "<span>"+attribute.popoverTitle+"</span><button type='button' class='close'>&times;</button>";                   
-                       
-                       $(element).popover({
+                   }
+                   
+                   $(element).popover({
                             'placement': attribute.popoverPlacement || 'bottom',
                             'html': true,                                               
-                            'title': $compile(getTitle)(scope),                        
-                            'content' :  $compile(popoverBodyData)(scope),
+                            'title': $compile(getTitle)(scope) || '',                        
+                            'content' :  $compile(popoverBodyData)(scope) || '',
                             'trigger': attribute.popoverTrigger || 'click'
-                        });                   
-                   }
+                        });      
                    
                return eventBinding(element,scope,attribute);
            },
